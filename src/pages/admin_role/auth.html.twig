@@ -1,0 +1,158 @@
+{% extends 'admin/page_single.html.twig' %}
+{% block content %}
+<style>
+    .grid-container{
+        max-width: 100rem;
+    }
+</style>
+<div class="cell padding-1 shadow ">  
+    <form id="form">
+    <div class="grid-x fieldset" id="rbac">
+        <div class="cell large-2 large-offset-1">
+            <div class="grid-x">
+                <input type="checkbox" id="menu.sign" name="menu[]" value="menu.id" class="controller menu.sign" data-action=" menu.sign "><label for=" menu.sign ">menu.name</label>
+            </div>
+        </div>
+        <div class="cell large-9">
+            <div class="grid-x fieldset largin-up-6 medium-up-6 small-up-3">   
+                <div class="cell large-3">
+                    <input type="checkbox" id=" menu.sign loop.index " name="menu_action_menu.sign[]" value="action.id " class="action  menu.sign}" data-action="menu.sign"><label for=" menu.sign- loop.index}">action.name </label>                    
+                </div>
+                
+                <fieldset class="cell auto fieldset">
+                    <legend>设置api</legend>
+                    <input type="checkbox" id=" menu.sign loop.index " name="menu_action_menu.sign[]" value="action.id " class="action  menu.sign}" data-action="menu.sign"><label for=" menu.sign- loop.index}">action.name </label>
+                </fieldset>
+                <div class="width-100"><hr></div> 
+                
+            </div>                                               
+        </div>
+    </div>    
+     <div class="cell">
+        <button class="button small" type="button" id="save">提交</button>
+    </div>
+    </form>
+</div>
+{% endblock %}
+{% block extra %}
+<script>
+const menusURL = baseURL + "/api/admin/role/rbac/{{ app.request.attributes.get('id') }}"
+const rbacSetURL = baseURL + "/api/admin/role/rbac/set/{{ app.request.attributes.get('id') }}"
+httpRequest('get', menusURL)
+    .then((data) => {
+        if (data.code != 0) {
+            layer.msg(data.msg)
+        } else {
+            layer.load(2)         
+            let html = data.data.menus.map((v) => {
+                let roleMenus = data.data.roleMenus               
+                let roleActions = data.data.roleActions
+                let roleApis = data.data.roleApis
+                roleMenus = roleMenus ? roleMenus : []
+                roleActions = roleActions ? roleActions : []
+                roleApis = roleApis ? roleApis : []
+                let h = `
+                    <div class="cell large-2 large-offset-1">
+                        <div class="grid-x">
+                            <input type="checkbox" id="${v.sign}" name="menu" value="${v.id}" class="controller ${v.sign}" data-action="${v.sign}" ${roleMenus.includes(v.id) ? "checked" : ""}><label for="${v.sign}">${v.name}</label>
+                        </div>
+                    </div>
+                `
+                let actions = '<div class="cell large-9"> <div class="grid-x fieldset largin-up-6 medium-up-6 small-up-3">  '
+                for (action of v.actions) {
+                    let index = 1
+                    let input = '';
+                    for (api of action.apis) {                          
+                        input += 
+                        `<input type="checkbox" id="api-${api.id}" name="menu_api_${v.sign}_${action.id}" value="${api.id}" class="api ${v.sign} api-${action.id}" data-action="${v.sign}" ${roleApis.includes(api.id) ? "checked" : ""}><label for="api-${api.id}">${api.method} ${api.path} </label>                           
+                        `
+                        if (index%3 == 0) input += '</br>'
+                        index++
+                    }
+                    let apis = `<fieldset class="cell auto fieldset"> <legend>设置api</legend>${input}</fieldset>`
+                    actions += `<div class="cell large-3">
+                                    <input type="checkbox" id="action-${action.id}" name="menu_action_${v.sign}" value="${action.id}" class="action ${v.sign}" data-api="api-${action.id}" data-action="${v.sign}" ${roleActions.includes(action.id) ? "checked" : ""}><label for="action-${action.id}">${action.name} </label>                    
+                                </div>
+                               ${apis}
+                                <div class="width-100"><hr></div> 
+                    `
+                }
+
+                actions += '</div></div>'
+
+                return `
+                    ${h} ${actions}
+                `
+            })                
+            document.querySelector("#rbac").innerHTML = html.join('')
+            layer.closeAll()
+        }
+    })
+    .catch((error) => {
+        console.log(error)
+    })
+
+
+////////
+//全选 or 全不选
+$('body').on('click', '.controller', function(){ 
+    var checked = $(this).prop('checked');
+    var action = $(this).attr('data-action');
+    if(checked){
+        $('.'+action).each(function(){
+            $(this).prop('checked',true);
+        })
+    }else{
+        $('.'+action).each(function(){
+            $(this).prop('checked',false);
+        })
+    }
+})
+//子项 有一个选中 则父也选中 如果都不选中 父也不选中
+$('body').on('click', '.action', function(){
+    var action = $(this).attr('data-action');
+    var api = $(this).attr('data-api');
+    var checked = false;
+    $('.action.'+action).each(function(){
+        if($(this).prop('checked')){
+            checked = true;
+        }
+    })
+    
+    if(checked){
+        $('.controller.'+action).prop('checked',true);
+    }else{
+        $('.controller.'+action).prop('checked',false);
+    }
+
+    if ($(this).prop("checked")) {
+        $('.api.'+api).each(function(){
+            $(this).prop('checked',true);
+        })
+    } else {
+        $('.api.'+api).each(function(){
+            $(this).prop('checked',false);
+        })
+    }
+})
+
+///
+$('#save').click(function(){
+    httpRequest('post', rbacSetURL, $("#form").serialize())
+        .then((data) => {
+            if (data.code == 1) {
+                layer.msg(data.msg, {time:2000, icon:5}, function() {
+                    layer.closeAll()
+                })                        
+            } else {
+                layer.msg(data.msg, {time:2000, icon:1}, function() {
+                    location.reload()
+                }) 
+            }
+        })
+        .catch((error) => {
+            console.log(error)
+        })
+})
+</script>
+{% endblock %}
