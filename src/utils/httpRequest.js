@@ -1,6 +1,10 @@
 import axios from 'axios'
+import store from '../redux/store/store'
+import Swal from 'sweetalert2'
 
-const httpRequest = async function(method, url, data='') {
+const httpRequest = async function(method, url, data='') {  
+    const state = store.getState()
+
     return new Promise((resolve,reject)=>{
         let token = localStorage.getItem("token")
         let logout = ""
@@ -8,12 +12,21 @@ const httpRequest = async function(method, url, data='') {
             method: method,
             url: url,
             data: data,
-            headers: {'Authorization': "{{app.request.session.get('token')}}"}
+            headers: {'Authorization': state.jwt.jwtToken ? state.jwt.jwtToken.token : ''}
         }).then((response) => {
             let data = response.data
             if (data.code === 40001) {
-               
-            } else {                
+               window.location.href="/admin/login"
+            } else if (data.code == 1) {                
+                Swal.fire({
+                    //data.msg,
+                    text: data.msg,
+                    icon:'info',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    position: 'top-end',
+                })
+            } else {
                 resolve(data);
             }
         })

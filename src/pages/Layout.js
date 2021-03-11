@@ -7,6 +7,7 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
+    useHistory,
 } from 'react-router-dom'
 
 import Login from './security/Login'
@@ -16,8 +17,10 @@ import {useState} from 'react'
 import httpRequest, {baseURL} from '../utils/httpRequest'
 import Swal from 'sweetalert2'
 import Modal from '../components/Modal'
+import {useSelector, useDispatch} from 'react-redux' 
+import {clearJwt} from '../redux/reducers/jwtSlice'
 
-const Component = () => {
+const Component = () => {    
     const passwordURL = `${baseURL}/api/admin/password`
     const [formData, setFormData] = useState({
         old_password: '',
@@ -69,6 +72,10 @@ const Component = () => {
 }
 
 const Layout = () => {
+    const currentUser = useSelector(state => state.jwt.jwtToken.username)
+    const dispatch = useDispatch()
+    let history = useHistory()
+    
     const menuCheckApiURL = `${baseURL}/api/admin/menu/check` 
     const [userMenu, setUserMenu] = useState(false)
     const [modalToggle, setModalToggle] = useState(false)
@@ -84,8 +91,13 @@ const Layout = () => {
                 timer: 2000,
                 showConfirmButton: false,
                 position: 'top-end',
-            })             
+            })
         })
+    }
+
+    const handleLogout = () => {
+        dispatch(clearJwt())
+        history.push("/admin/action/index")
     }
 
     return (
@@ -115,11 +127,11 @@ const Layout = () => {
                                 <a className="check-action" onClick={()=>handleMenuCheck()}><i className="fas fa-tasks"></i> 初始化菜单action</a>
                             </li>                                
                             <li>
-                                <a className="modify-password" data-href=""><i className="fi fi-key"></i>修改密码</a>
+                                 <a onClick={()=>setModalToggle(true)}><i className="fi fi-key"></i> 修改密码</a>
                             </li>
                         
                             <li>
-                                <a className="ajax-shenhe" data-title="是否确定退出?" data-href=""><i className="fi fi-power"></i>退出</a>
+                                <a onClick={()=>handleLogout()}><i className="fi fi-power"></i>退出</a>
                             </li> 
                             
                                                             
@@ -145,7 +157,7 @@ const Layout = () => {
                 <ul className="dropdown menu text-align" data-dropdown-menu="data-dropdown-menu"
                  onMouseOver={()=>setUserMenu(true)} onMouseOut={()=>setUserMenu(false)}>               
                     <li className="width-100">
-                        <a><img src={avatar} width="20" style={{borderRadius: '50%'}} /> adminnn</a>
+                        <a><img src={avatar} width="20" style={{borderRadius: '50%'}} /> {currentUser}</a>
                         <ul className={`menu vertical user-menu ${userMenu ? 'show' : 'hide'}`} >
                             <li>
                                 <a onClick={()=>handleMenuCheck()}><i className="fas fa-tasks"></i> 初始化菜单action</a>
@@ -155,7 +167,7 @@ const Layout = () => {
                                 <a onClick={()=>setModalToggle(true)}><i className="fi fi-key"></i> 修改密码</a>
                             </li>                                
                             <li>
-                                <a><i className="fi fi-power"></i>退出</a>
+                                <a onClick={()=>handleLogout()}><i className="fi fi-power"></i>退出</a>
                             </li> 
                         </ul>
                     </li>                    

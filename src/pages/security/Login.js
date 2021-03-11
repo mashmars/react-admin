@@ -4,7 +4,11 @@ import {useState} from 'react'
 import {useHistory} from 'react-router-dom'
 import Swal from 'sweetalert2'
 
+import {useDispatch} from 'react-redux'
+import {createJwt} from '../../redux/reducers/jwtSlice'
+
 const Login = () => {   
+    const dispatch = useDispatch()
     let history = useHistory()
     const loginURL = `${baseURL}/api/admin/login`;
     const [formData, setFormData] = useState({
@@ -28,6 +32,8 @@ const Login = () => {
                     showConfirmButton: false,
                     position: 'top-end',
                 }).then(()=>{
+                    console.log(data)
+                    dispatch(createJwt(data.data))
                     history.push("/admin")
                 })
             } else {

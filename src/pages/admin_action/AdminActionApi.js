@@ -55,27 +55,16 @@ const AdminActionApi = () => {
 
     const handleSubmit = () => {
         httpRequest('post', setApiActionURL, {action_id:id, ids:ids}).then((data)=> {
-            if (data.code == 0) {
-                Swal.fire({
-                    //data.msg,
-                    text: data.msg,
-                    icon:'success',
-                    timer: 2000,
-                    showConfirmButton: false,
-                    position: 'top-end',
-                }).then(()=>{
-                    //history.push("/admin/action/index")
-                })
-            } else {
-                Swal.fire({
-                    //data.msg,
-                    text: data.msg,
-                    icon:'error',
-                    timer: 2000,
-                    showConfirmButton: false,
-                    position: 'top-end',
-                })
-            }
+            Swal.fire({
+                //data.msg,
+                text: data.msg,
+                icon:'success',
+                timer: 2000,
+                showConfirmButton: false,
+                position: 'top-end',
+            }).then(()=>{
+                //history.push("/admin/action/index")
+            })
         })
     }
 

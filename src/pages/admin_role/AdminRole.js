@@ -33,29 +33,18 @@ const AdminRole = () => {
           }).then((result) => {
             if (result.isConfirmed) {
                 httpRequest('post', deleteURL, qs.stringify({id:id})).then((data)=>{
-                    if (data.code == 0) {
-                        const resourceDiff = resource.filter((v)=>{
-                            if (v.id != id) return true
-                        })
-                        setResource(resourceDiff)
-                        Swal.fire({
-                            //data.msg,
-                            text: data.msg,
-                            icon:'success',
-                            timer: 2000,
-                            showConfirmButton: false,
-                            position: 'top-end',
-                        })
-                    } else {
-                        Swal.fire({
-                            //data.msg,
-                            text: data.msg,
-                            icon:'info',
-                            timer: 2000,
-                            showConfirmButton: false,
-                            position: 'top-end',
-                        })
-                    }
+                    const resourceDiff = resource.filter((v)=>{
+                        if (v.id != id) return true
+                    })
+                    setResource(resourceDiff)
+                    Swal.fire({
+                        //data.msg,
+                        text: data.msg,
+                        icon:'success',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        position: 'top-end',
+                    })
                 })              
             }
         })       

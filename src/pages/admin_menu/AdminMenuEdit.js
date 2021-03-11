@@ -27,27 +27,16 @@ const AdminMenuEdit = () => {
 
     const handleSubmit = () => {
         httpRequest("post", editURL, qs.stringify(resource)).then((data)=>{
-            if (data.code == 0) {
-                Swal.fire({
-                    //data.msg,
-                    text: data.msg,
-                    icon:'success',
-                    timer: 2000,
-                    showConfirmButton: false,
-                    position: 'top-end',
-                }).then(()=>{
-                    history.push("/admin/menu/index")
-                })
-            } else {
-                Swal.fire({
-                    //data.msg,
-                    text: data.msg,
-                    icon:'error',
-                    timer: 2000,
-                    showConfirmButton: false,
-                    position: 'top-end',
-                })
-            }
+            Swal.fire({
+                //data.msg,
+                text: data.msg,
+                icon:'success',
+                timer: 2000,
+                showConfirmButton: false,
+                position: 'top-end',
+            }).then(()=>{
+                history.push("/admin/menu/index")
+            })
         })
     }
 
