@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom'
+import {a} from 'react-router-dom'
 import {useState} from 'react'
 
 const Pagination = ({count, totalPage, currentPage, handleCurrentPageChange, pageChange}) => {  
@@ -40,7 +40,7 @@ const Pagination = ({count, totalPage, currentPage, handleCurrentPageChange, pag
                 return  currentPage == page ? 
                     <span className="current" key={index}>{page}</span> 
                     : <span className="page" key={index}>
-                        <Link onClick={() => handleCurrentPageChange(page, pageSize)}>{page}</Link>
+                        <a onClick={() => handleCurrentPageChange(page, pageSize)}>{page}</a>
                     </span>
             })
         )
@@ -52,11 +52,11 @@ const Pagination = ({count, totalPage, currentPage, handleCurrentPageChange, pag
             {totalPage > 1 && currentPage > 1 &&
                <>
                 <span className="first" key="first">
-                    <Link onClick={() => handleCurrentPageChange(firstPage, pageSize)}>&lt;</Link>
+                    <a onClick={() => handleCurrentPageChange(firstPage, pageSize)}>&lt;</a>
                 </span>
         
                 <span className="previous" key="prev">
-                    <Link onClick={() => handleCurrentPageChange(prevPage, pageSize)}>&lt;&lt;</Link>
+                    <a onClick={() => handleCurrentPageChange(prevPage, pageSize)}>&lt;&lt;</a>
                 </span>
                </>
             }
@@ -66,11 +66,11 @@ const Pagination = ({count, totalPage, currentPage, handleCurrentPageChange, pag
             {totalPage > 1 && currentPage != totalPage && 
                 <>
                 <span className="next" key="next">
-                    <Link onClick={() => handleCurrentPageChange(nextPage, pageSize)}>&gt;</Link>
+                    <a onClick={() => handleCurrentPageChange(nextPage, pageSize)}>&gt;</a>
                 </span>
 
                 <span className="last" key="last">
-                    <Link  onClick={() => handleCurrentPageChange(lastPage, pageSize)}>&gt;&gt;</Link>
+                    <a  onClick={() => handleCurrentPageChange(lastPage, pageSize)}>&gt;&gt;</a>
                 </span>               
                 </>
             }
@@ -84,6 +84,9 @@ const Pagination = ({count, totalPage, currentPage, handleCurrentPageChange, pag
                 <option value="50">50条/页</option>
                 <option value="100">100条/页</option>
             </select>
+            <span className="customer-page-size">自定义条数</span>
+            <input type="text" placeholder="" onChange={(e)=>setPageSize(e.target.value)} />
+            <button type="button" className="button small margin-bottom-0 padding-tb hollow success" onClick={()=>handleCurrentPageChange(pageChange, pageSize || 10)}>查询</button>
         </div>
     )
 }

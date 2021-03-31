@@ -220,8 +220,22 @@ table tr .switch .switch-active,table tr .switch .switch-inactive {
     padding: 0.1rem 0.5rem;
     background-position: right 0.3rem center
 }
+.pagination .customer-page-size {
+    margin-left: 8px;
+}
+.pagination input {
+    width: 3rem;
+    display: inline-block;
+    height: 1.75rem;
+    margin-left: 8px;
+}
+.pagination button {
+    padding: 0.42rem .625rem;
+    margin-left: 8px;
+}
 .pagination .count {
     margin-right: 8px;
 }
+
 
 
