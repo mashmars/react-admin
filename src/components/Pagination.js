@@ -14,6 +14,7 @@ const Pagination = ({count, totalPage, currentPage, handleCurrentPageChange, pag
     let firstPage = 1
     
     const [pageSize, setPageSize] = useState(10)
+    const [pageSizeCustomer, setPageSizeCustomer] = useState("")
  
 
     //只显示5页 6 2
@@ -74,9 +75,10 @@ const Pagination = ({count, totalPage, currentPage, handleCurrentPageChange, pag
                 </span>               
                 </>
             }
-            <select defaultValue={pageSize} onChange={(e) => {
-                setPageSize(e.target.value)                
-                handleCurrentPageChange(pageChange, e.target.value)
+            <select defaultValue={pageSize} onChange={(e) => {                
+                setPageSize(e.target.value)       
+                setPageSizeCustomer("")       
+                handleCurrentPageChange(pageChange, e.target.value)   
             }}>
                 <option value="5">5条/页</option>
                 <option value="10">10条/页</option>
@@ -85,8 +87,12 @@ const Pagination = ({count, totalPage, currentPage, handleCurrentPageChange, pag
                 <option value="100">100条/页</option>
             </select>
             <span className="customer-page-size">自定义条数</span>
-            <input type="text" placeholder="" onChange={(e)=>setPageSize(e.target.value)} />
-            <button type="button" className="button small margin-bottom-0 padding-tb hollow success" onClick={()=>handleCurrentPageChange(pageChange, pageSize || 10)}>
+            <input type="text"  value={pageSizeCustomer} id="page-size-input" onChange={(e)=>{
+                setPageSizeCustomer(e.target.value)
+                setPageSize(e.target.value)
+            }} />
+            {/**onChange={(e)=>setPageSize(e.target.value)} */}
+            <button type="button" className="button small margin-bottom-0 padding-tb hollow success" onClick={()=>handleCurrentPageChange(pageChange, pageSizeCustomer || pageSize)}>
             <i className="fas fa-search"></i> 查询</button>
         </div>
     )
