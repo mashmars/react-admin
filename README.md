@@ -1,7 +1,7 @@
 # 效果图
-![登陆页](../public/react-login.png)
-![角色页](../public/react-role.png)
-![授权页](../public/react-role-grant.png)
+![登陆页](https://github.com/mashmars/react-admin/blob/main/public/react-login.png)
+![角色页](https://github.com/mashmars/react-admin/blob/main/public/react-role.png)
+![授权页](https://github.com/mashmars/react-admin/blob/main/public/react-role-grant.png)
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
