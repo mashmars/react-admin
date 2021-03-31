@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
 import httpRequest, {baseURL} from '../../utils/httpRequest'
 import Switch from '../../components/Switch'
+import Pagination from '../../components/Pagination'
 import qs from 'qs'
 import Swal from 'sweetalert2'
 
@@ -12,11 +13,38 @@ const Admin = () => {
     const deleteURL = `${baseURL}/api/admin/delete`
     const statusURL = `${baseURL}/api/admin/status`
     const [resource, setResource] = useState([])
-    useEffect(() => {
-        httpRequest('get', resourceURL).then((data) => {
+    const [totalPage, setTotalPage] = useState(0)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [searchForm, setSearchForm] = useState({
+        name: "",
+        is_enabled: '',
+        page: 1,
+        pageSize: 10,
+    })
+
+    const paginateRequest = (url) => { 
+        httpRequest('get', url, searchForm).then((data) => {
             setResource(data.data)
+            setTotalPage(data.totalPage)
         })
-    }, [])  
+    }
+    useEffect(() => paginateRequest(resourceURL), [currentPage])
+
+    const handleSearchChange = (event) => {
+        setSearchForm({
+            ...searchForm,
+            [event.target.id]: event.target.value,
+        })
+    }    
+    const handleSearchSubmit = () => handleCurrentPageChange(currentPage == 1 ? 0 : 1) //you known why
+    const handleCurrentPageChange = (page) => {        
+        //目前两个都必须 
+        setSearchForm({
+            ...searchForm,
+            page: page
+        })
+        setCurrentPage(page) 
+    } 
 
     const handleDelete = (id) => {
         Swal.fire({
@@ -54,7 +82,7 @@ const Admin = () => {
                 return (
                     <tr className="text-center" key={index}>
                         <td>{row.username}</td>
-                        <td>{row.role_id}</td>
+                        <td>{row.role_name}</td>
                         <td>{row.descript}</td>
                         <td>
                             <Switch id={row.id} active={row.is_enabled} url={statusURL} />
@@ -76,37 +104,9 @@ const Admin = () => {
             <div className="grid-x padding-1 shadow">
                 <div className="cell">
                     <Link to={addURL} className="button hollow primary small"><i className="fas fa-plus"></i>
-                    添加</Link>                     
-                    <a className="button info small float-right search">搜索</a>
-                    <div id="search" className="clearfix">
-                        <form action="" method="get" id="form-search">
-                            <div className="grid-x grid-padding-x">                                       
-                                <div className="large-1 small-3 cell">
-                                    <label htmlFor="" className="text-right middle">编号:</label>
-                                </div>
-                                <div className="large-2 small-9 cell">
-                                    <input type="text" id="" name="" placeholder="" defaultValue="" />
-                                </div> 
-                                <div className="large-1 small-3 cell">
-                                    <label htmlFor="" className="text-right middle">下拉框:</label>
-                                </div>
-                                <div className="large-2 small-9 cell">
-                                    <select name="" id="">
-                                        <option defaultValue="">全部</option>                                                    
-                                    </select>
-                                </div> 
-                                <div className="large-1 small-3 cell">
-                                    <label htmlFor="" className="text-right middle">输入框:</label>
-                                </div>
-                                <div className="large-1 small-9 cell">
-                                    <input type="text" id="" name="" placeholder="年份" defaultValue="" />
-                                </div>                                            
-                                <div className="large-2 small-12 cell">
-                                    <button type="button" className="button alert hollow margin-bottom-0 padding-tb small" id="button-search"><i className="fas fa-search"></i> 查询</button>
-                                </div>                                                                        
-                            </div>                        
-                        </form>
-                    </div>
+                    添加</Link> 
+                    <a className="button info small float-right search">搜索</a>                   
+                    
                     <hr />                                
                     
                     <div className="table-scroll">
@@ -127,7 +127,13 @@ const Admin = () => {
                     </div>                                                           
                 </div>
             </div>
-            <div className="grid-x margin-top-2 align-center"></div>
+            <div className="grid-x margin-top-2 align-center">
+            <Pagination                
+                totalPage={totalPage} 
+                currentPage={currentPage} 
+                handleCurrentPageChange={(page)=>handleCurrentPageChange(page)}
+            />
+            </div>
         </>
     )
 }

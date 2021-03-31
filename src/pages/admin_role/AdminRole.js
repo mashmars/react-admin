@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react'
 import {Link, Switch as SwitchRouter} from 'react-router-dom'
 import httpRequest, {baseURL} from '../../utils/httpRequest'
 import Switch  from '../../components/Switch'
+import Pagination from '../../components/Pagination'
 import qs from 'qs'
 import Swal from 'sweetalert2'
 
@@ -14,11 +15,39 @@ const AdminRole = () => {
     const deleteURL = `${baseURL}/api/admin/role/delete`
     const statusURL = `${baseURL}/api/admin/role/status`       
     const [resource, setResource] = useState([])
-    useEffect(() => {
-        httpRequest('get', resourceURL).then((data) => {
+    const [totalPage, setTotalPage] = useState(0)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [searchForm, setSearchForm] = useState({
+        name: "",
+        is_enabled: '',
+        page: 1,
+        pageSize: 10,
+    })
+
+    const paginateRequest = (url) => { 
+        httpRequest('get', url, searchForm).then((data) => {
             setResource(data.data)
-        })          
-    }, [])
+            setTotalPage(data.totalPage)
+        })
+    }
+    useEffect(() => paginateRequest(resourceURL), [currentPage])
+
+    const handleSearchChange = (event) => {
+        setSearchForm({
+            ...searchForm,
+            [event.target.id]: event.target.value,
+        })
+    }    
+    const handleSearchSubmit = () => handleCurrentPageChange(currentPage == 1 ? 0 : 1) //you known why
+    const handleCurrentPageChange = (page) => {        
+        //目前两个都必须 
+        setSearchForm({
+            ...searchForm,
+            page: page
+        })
+        setCurrentPage(page) 
+    }
+
 
     const handleDelete = (id) => {
         Swal.fire({
@@ -83,27 +112,25 @@ const AdminRole = () => {
                     <form action="" method="get" id="form-search">
                         <div className="grid-x grid-padding-x">                                       
                             <div className="large-1 small-3 cell">
-                                <label htmfor="" className="text-right middle">编号:</label>
+                                <label htmfor="name" className="text-right middle">名称:</label>
                             </div>
                             <div className="large-2 small-9 cell">
-                                <input type="text" id="" name="" placeholder="" defaultValue="" />
+                                <input type="text" id="name" name="name" placeholder="" defaultValue={searchForm.name} onChange={(e) => handleSearchChange(e)} />
                             </div> 
                             <div className="large-1 small-3 cell">
-                                <label htmfor="" className="text-right middle">下拉框:</label>
+                                <label htmfor="is_enabled" className="text-right middle">状态:</label>
                             </div>
                             <div className="large-2 small-9 cell">
-                                <select name="" id="">
-                                    <option defaultValue="">全部</option>                                                    
+                                <select name="is_enabled" id="is_enabled" defaultValue={searchForm.is_enabled} onChange={(e) => handleSearchChange(e)}>
+                                    <option value="">全部</option>
+                                    <option value="1">启用</option>
+                                    <option value="0">禁用</option>
                                 </select>
-                            </div> 
-                            <div className="large-1 small-3 cell">
-                                <label htmfor="" className="text-right middle">输入框:</label>
-                            </div>
-                            <div className="large-1 small-9 cell">
-                                <input type="text" id="" name="" placeholder="年份" defaultValue="" />
-                            </div>                                            
+                            </div>                                  
                             <div className="large-2 small-12 cell">
-                                <button type="button" className="button alert hollow margin-bottom-0 padding-tb small" id="button-search"><i className="fas fa-search"></i> 查询</button>
+                                <button type="button" className="button alert hollow margin-bottom-0 padding-tb small" onClick={()=>handleSearchSubmit()}>
+                                    <i className="fas fa-search"></i> 
+                                查询</button>
                             </div>                                                                        
                         </div>                        
                     </form>
@@ -127,8 +154,14 @@ const AdminRole = () => {
                                                                     
             </div>
         </div>
-        {/** pagination */}
-        <div className="grid-x margin-top-2 align-center"></div>
+        {/** pagination */} 
+        <div className="grid-x margin-top-2 align-center">
+            <Pagination                
+                totalPage={totalPage} 
+                currentPage={currentPage} 
+                handleCurrentPageChange={(page)=>handleCurrentPageChange(page)}
+            />
+        </div>
         </>
     )
 }

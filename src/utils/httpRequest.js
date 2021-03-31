@@ -5,14 +5,13 @@ import Swal from 'sweetalert2'
 const httpRequest = async function(method, url, data='') {  
     const state = store.getState()
 
-    return new Promise((resolve,reject)=>{
-        let token = localStorage.getItem("token")
-        let logout = ""
+    return new Promise((resolve,reject)=>{        
         axios({
             method: method,
             url: url,
             data: data,
-            headers: {'Authorization': state.jwt.jwtToken ? state.jwt.jwtToken.token : ''}
+            params: method == 'get' ?  data : '',
+            headers: {'Authorization':  state.jwt.jwtToken ? state.jwt.jwtToken.token :''}
         }).then((response) => {
             let data = response.data
             if (data.code === 40001) {

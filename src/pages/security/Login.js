@@ -56,7 +56,7 @@ const Login = () => {
                
                 <div className="cell">
                     <div className="alert callout" data-closable="slide-out-right">                   
-                        <p>本后台系统view层是使用react框架， go提供api服务， go使用jwt验证权限，redux(Todo)存储当前jwt管理登陆登出</p>  
+                        <p>本后台系统view层是使用react框架， go提供api服务， go使用jwt验证权限，redux(redux-toolkit redux-persist)存储当前jwt管理登陆登出</p>  
                     </div>
                 </div>
                          
@@ -73,13 +73,16 @@ const Login = () => {
                         </div>                    
                         <div className="floated-label-wrapper">
                             <label htmlFor="password">密码</label>
-                            <input type="password" id="password" name="password" placeholder="请输入登录密码" value={formData.password} onChange={(e)=>handleChange(e)}/>
+                            <input type="password" id="password" name="password" placeholder="请输入登录密码" value={formData.password} 
+                            onChange={(e)=>handleChange(e)}
+                            onKeyUp={(e) => {
+                                if(e.code === 'Enter' || e.code === 'NumpadEnter'){
+                                    handleSubmit()
+                                }
+                            }}
+                            />
                         </div>                        
-                        <button className="button expanded" type="button" id="login" onClick={()=>handleSubmit()}>登录</button>
-                        <div className="text-left">
-                            <input type="checkbox" id="remember_me" name="_remember_me" />   
-                            <label htmlFor="remember_me">记住密码</label>
-                        </div>
+                        <button className="button expanded" type="button" id="login" onClick={()=>handleSubmit()}>登录</button>                       
                     </form>                  
                 </div>
             </div>

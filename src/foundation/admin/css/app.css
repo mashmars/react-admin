@@ -23,6 +23,9 @@ table tr.inline td input,table tr.inline td select
     margin: 0;
     width:auto;
 }
+td a, td button {
+    margin-right:5px !important;
+}
 /*** top nav***/
 nav,.top-bar{
     background-color: #18bc9c;
@@ -39,7 +42,7 @@ nav .left{
     font-size: 16px;
 }
 nav .right{
-    position:fixed;
+    position:absolute;
     right:10px; 
     top:6px;  
     z-index:100; 
