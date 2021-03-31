@@ -100,7 +100,7 @@ const Layout = () => {
     const handleLogout = () => {
         dispatch(clearJwt())
         //history.push("/admin/action/index")
-        window.location.href="/admin/login"
+        //window.location.href="/admin/login"
     }
 
     return (
