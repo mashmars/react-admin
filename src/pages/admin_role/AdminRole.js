@@ -15,6 +15,7 @@ const AdminRole = () => {
     const deleteURL = `${baseURL}/api/admin/role/delete`
     const statusURL = `${baseURL}/api/admin/role/status`       
     const [resource, setResource] = useState([])
+    const [count, setCount] = useState(0)
     const [totalPage, setTotalPage] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
     const [searchForm, setSearchForm] = useState({
@@ -28,6 +29,7 @@ const AdminRole = () => {
         httpRequest('get', url, searchForm).then((data) => {
             setResource(data.data)
             setTotalPage(data.totalPage)
+            setCount(data.count)
         })
     }
     useEffect(() => paginateRequest(resourceURL), [currentPage])
@@ -38,12 +40,13 @@ const AdminRole = () => {
             [event.target.id]: event.target.value,
         })
     }    
-    const handleSearchSubmit = () => handleCurrentPageChange(currentPage == 1 ? 0 : 1) //you known why
-    const handleCurrentPageChange = (page) => {        
+    const handleSearchSubmit = () => handleCurrentPageChange(currentPage == 1 ? 0 : 1, searchForm.pageSize) //you known why
+    const handleCurrentPageChange = (page, pageSize) => {     
         //目前两个都必须 
         setSearchForm({
             ...searchForm,
-            page: page
+            page: page,
+            pageSize: pageSize,
         })
         setCurrentPage(page) 
     }
@@ -156,10 +159,12 @@ const AdminRole = () => {
         </div>
         {/** pagination */} 
         <div className="grid-x margin-top-2 align-center">
-            <Pagination                
+            <Pagination       
+                count={count}         
                 totalPage={totalPage} 
                 currentPage={currentPage} 
-                handleCurrentPageChange={(page)=>handleCurrentPageChange(page)}
+                handleCurrentPageChange={(page, pageSize)=>handleCurrentPageChange(page, pageSize)}
+                pageChange={currentPage == 1 ? 0 : 1} 
             />
         </div>
         </>

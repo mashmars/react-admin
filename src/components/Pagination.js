@@ -1,6 +1,7 @@
 import {Link} from 'react-router-dom'
+import {useState} from 'react'
 
-const Pagination = ({totalPage, currentPage, handleCurrentPageChange}) => {   
+const Pagination = ({count, totalPage, currentPage, handleCurrentPageChange, pageChange}) => {  
     currentPage = Number(currentPage) || 1
     totalPage = Number(totalPage)
     
@@ -12,6 +13,7 @@ const Pagination = ({totalPage, currentPage, handleCurrentPageChange}) => {
     prevPage = prevPage < 1 ? 1 : prevPage;
     let firstPage = 1
     
+    const [pageSize, setPageSize] = useState(10)
  
 
     //只显示5页 6 2
@@ -38,7 +40,7 @@ const Pagination = ({totalPage, currentPage, handleCurrentPageChange}) => {
                 return  currentPage == page ? 
                     <span className="current" key={index}>{page}</span> 
                     : <span className="page" key={index}>
-                        <Link onClick={() => handleCurrentPageChange(page)}>{page}</Link>
+                        <Link onClick={() => handleCurrentPageChange(page, pageSize)}>{page}</Link>
                     </span>
             })
         )
@@ -46,14 +48,15 @@ const Pagination = ({totalPage, currentPage, handleCurrentPageChange}) => {
     
     return (
         <div className="pagination">
+            <span className="count">总共 {count || 0} 条</span>
             {totalPage > 1 && currentPage > 1 &&
                <>
                 <span className="first" key="first">
-                    <Link onClick={() => handleCurrentPageChange(firstPage)}>&lt;</Link>
+                    <Link onClick={() => handleCurrentPageChange(firstPage, pageSize)}>&lt;</Link>
                 </span>
         
                 <span className="previous" key="prev">
-                    <Link onClick={() => handleCurrentPageChange(prevPage)}>&lt;&lt;</Link>
+                    <Link onClick={() => handleCurrentPageChange(prevPage, pageSize)}>&lt;&lt;</Link>
                 </span>
                </>
             }
@@ -63,14 +66,24 @@ const Pagination = ({totalPage, currentPage, handleCurrentPageChange}) => {
             {totalPage > 1 && currentPage != totalPage && 
                 <>
                 <span className="next" key="next">
-                    <Link onClick={() => handleCurrentPageChange(nextPage)}>&gt;</Link>
+                    <Link onClick={() => handleCurrentPageChange(nextPage, pageSize)}>&gt;</Link>
                 </span>
 
                 <span className="last" key="last">
-                    <Link  onClick={() => handleCurrentPageChange(lastPage)}>&gt;&gt;</Link>
-                </span>
+                    <Link  onClick={() => handleCurrentPageChange(lastPage, pageSize)}>&gt;&gt;</Link>
+                </span>               
                 </>
             }
+            <select defaultValue={pageSize} onChange={(e) => {
+                setPageSize(e.target.value)                
+                handleCurrentPageChange(pageChange, e.target.value)
+            }}>
+                <option value="5">5条/页</option>
+                <option value="10">10条/页</option>
+                <option value="20">20条/页</option>
+                <option value="50">50条/页</option>
+                <option value="100">100条/页</option>
+            </select>
         </div>
     )
 }

@@ -210,4 +210,18 @@ table tr .switch .switch-active,table tr .switch .switch-inactive {
     right: 1rem;
 }
 
+.pagination {
+    max-width: 100rem;
+}
+.pagination select {
+    width: 6rem;
+    margin-left: 5px;
+    height: 1.75rem;
+    padding: 0.1rem 0.5rem;
+    background-position: right 0.3rem center
+}
+.pagination .count {
+    margin-right: 8px;
+}
+
 
