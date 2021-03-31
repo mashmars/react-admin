@@ -232,6 +232,7 @@ table tr .switch .switch-active,table tr .switch .switch-inactive {
 .pagination button {
     padding: 0.42rem .625rem;
     margin-left: 8px;
+    vertical-align: inherit;
 }
 .pagination .count {
     margin-right: 8px;

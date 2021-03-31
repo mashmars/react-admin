@@ -132,8 +132,7 @@ const AdminRole = () => {
                             </div>                                  
                             <div className="large-2 small-12 cell">
                                 <button type="button" className="button alert hollow margin-bottom-0 padding-tb small" onClick={()=>handleSearchSubmit()}>
-                                    <i className="fas fa-search"></i> 
-                                查询</button>
+                                    <i className="fas fa-search"></i> 查询</button>
                             </div>                                                                        
                         </div>                        
                     </form>

@@ -86,7 +86,8 @@ const Pagination = ({count, totalPage, currentPage, handleCurrentPageChange, pag
             </select>
             <span className="customer-page-size">自定义条数</span>
             <input type="text" placeholder="" onChange={(e)=>setPageSize(e.target.value)} />
-            <button type="button" className="button small margin-bottom-0 padding-tb hollow success" onClick={()=>handleCurrentPageChange(pageChange, pageSize || 10)}>查询</button>
+            <button type="button" className="button small margin-bottom-0 padding-tb hollow success" onClick={()=>handleCurrentPageChange(pageChange, pageSize || 10)}>
+            <i className="fas fa-search"></i> 查询</button>
         </div>
     )
 }
