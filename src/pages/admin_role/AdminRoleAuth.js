@@ -173,7 +173,7 @@ const AdminRoleAuth = () => {
         })
     }
 
-    const Item = () => {        
+    const Item = () => {       
         let menuAll = resource.menus ? resource.menus : []
         let roleMenus = resource.roleMenus && firstLoad ? resource.roleMenus : []
         let roleActions = resource.roleActions && firstLoad ? resource.roleActions : []
@@ -192,7 +192,7 @@ const AdminRoleAuth = () => {
                         <div className="cell large-9"> 
                             <div className="grid-x fieldset largin-up-6 medium-up-6 small-up-3">
                         {
-                            menu.actions.map((action, index)=> {
+                            menu.actions?.map((action, index)=> {
                                 let apiIput = action.apis.map((api, index) => {
                                     return (
                                         <>

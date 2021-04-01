@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
-    jwtToken: ''
+    jwtToken: {}
 }
 
 const jwtSlice = createSlice({
@@ -12,7 +12,7 @@ const jwtSlice = createSlice({
             state.jwtToken = action.payload
         },
         clearJwt(state, action) {
-            state.jwtToken = ''
+            state.jwtToken = {}
         }
     }
 })

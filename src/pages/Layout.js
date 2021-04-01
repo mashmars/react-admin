@@ -20,6 +20,7 @@ import Swal from 'sweetalert2'
 import Modal from '../components/Modal'
 import {useSelector, useDispatch} from 'react-redux' 
 import {clearJwt} from '../redux/reducers/jwtSlice'
+import {revokePrivilege} from '../redux/reducers/authorizedSlice'
 
 const Component = () => {    
     const passwordURL = `${baseURL}/api/admin/password`
@@ -99,6 +100,7 @@ const Layout = () => {
 
     const handleLogout = () => {
         dispatch(clearJwt())
+        dispatch(revokePrivilege())
         //history.push("/admin/action/index")
         //window.location.href="/admin/login"
     }

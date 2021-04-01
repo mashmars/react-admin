@@ -18,9 +18,11 @@ import AdminActionApi from '../pages/admin_action/AdminActionApi'
 import {
     Route,
     Link,
-    NavLink
+    NavLink,
+    Router
 } from 'react-router-dom'
 import {useState} from 'react'
+import {useSelector} from 'react-redux'
 
 const Routes = [
     {
@@ -132,21 +134,47 @@ const Routes = [
             },
         ]
     },
+    {
+        menuName: "系统管理",
+        sign: 'system',
+        subRoutes: []
+    },
 ]
 
 
 const Menu = () => {
+    const authorized = useSelector((state) => state.authorized.authorized)
     const [leftSubMenu, setLeftSubMenu] = useState('none')
     return (
         <>
         {
             Routes.map((route, index) => {
+                //一级菜单
+                let isAuthorized = false
+                for (let authorizedMenu of authorized.roleMenus) {
+                    if (authorizedMenu.sign == route.sign) {
+                        isAuthorized = true
+                        break;
+                    }
+                }
+                if (!isAuthorized) return
+
                 return (
                     <li key={index}>                    
                     <Link to="#" className="parent" onClick={()=>setLeftSubMenu(leftSubMenu == 'block' ? 'none' : 'block')}><i className="fas fa-users-cog"></i>{route.menuName}</Link>
                         <ul className="menu vertical nested" style={{ display: `${leftSubMenu}` }}>                                 
                             {
                                 route.subRoutes.map((subRoute, key) => {
+                                    //二级菜单
+                                    let isAuthorized = false
+                                    for (let authorizedAction of authorized.roleActions) {
+                                        if (authorizedAction.router_name == subRoute.path) {
+                                            isAuthorized = true
+                                            break;
+                                        }
+                                    }                    
+                                    if (!isAuthorized) return
+
                                     return (
                                         <li key={key}>
                                             <NavLink to={subRoute.path} exact={subRoute.exact}
@@ -173,17 +201,29 @@ const Menu = () => {
 
 
 const SwitchRoute = () => {
+    const authorized = useSelector((state) => state.authorized.authorized)
     return (
         <>
         {
-            Routes.map((route, index) => {
-                return route.subRoutes.map((subRoute, key) => {
+            Routes.map((route, index) => {               
+                return route.subRoutes.map((subRoute, key) => {   
+                    //没有权限的都不给route
+                    let isAuthorized = false
+                    for (let authorizedAction of authorized.roleActions) {
+                        if (authorizedAction.router_name == subRoute.path) {
+                            isAuthorized = true
+                            break;
+                        }
+                    }                    
+                    if (!isAuthorized) return
+                     
                     let routes = []
                     let route = subRoute.subMenus.map((subMenu, index) => {
                         return <Route key={index} path={subMenu.path} component={subMenu.component} exact={subMenu.exact} />
                     })
                     routes.push(route)
                     routes.push(<Route key={key} path={subRoute.path} component={subRoute.component} exact={subRoute.exact} />)
+                  
                     return routes
                 })
             })

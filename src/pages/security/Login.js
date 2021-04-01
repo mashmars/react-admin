@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'
 
 import {useDispatch} from 'react-redux'
 import {createJwt} from '../../redux/reducers/jwtSlice'
+import {grantPrivilege} from '../../redux/reducers/authorizedSlice'
 
 const Login = () => {   
     const dispatch = useDispatch()
@@ -32,8 +33,8 @@ const Login = () => {
                     showConfirmButton: false,
                     position: 'top-end',
                 }).then(()=>{
-                    console.log(data)
-                    dispatch(createJwt(data.data))
+                    dispatch(grantPrivilege(data.data.authorize))
+                    dispatch(createJwt(data.data.token))                    
                     history.push("/admin")
                 })
             } else {
